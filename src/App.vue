@@ -1,30 +1,79 @@
 <script setup>
-import HelloWorld from './components/HelloWorld.vue'
+import { ref, computed, onMounted, watch } from "vue";
+
+const name = ref("");
+const inputContext = ref("");
+const category = ref(null);
+const todoArr = ref([]);
+
+watch(name, (value) => {
+  localStorage.setItem("name", value);
+});
+
+onMounted(() => {
+  name.value = localStorage.getItem("name") || "";
+});
+
+const addTodo = () => {
+  if (inputContext.value.trim() === "" || category.value === null) {
+  } else {
+    todoArr.value.push({
+      todo: inputContext.value,
+      category: category.value,
+      createdAt: new Date().getTime(),
+    });
+    inputContext.value = "";
+    category.value = null;
+  }
+};
 </script>
 
 <template>
-  <div>
-    <a href="https://vitejs.dev" target="_blank">
-      <img src="/vite.svg" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://vuejs.org/" target="_blank">
-      <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
-    </a>
+  <div class="container">
+    <header>
+      <h3>
+        Hello,
+        <input
+          placeholder="your name"
+          class="disabled name-input"
+          v-model="name"
+        />
+      </h3>
+    </header>
+    <form @submit.prevent="addTodo" class="main-section">
+      <p>Create a to do!</p>
+      <input
+        type="text"
+        name=""
+        v-model="inputContext"
+        class="input"
+        placeholder="Start writing..."
+      />
+      <div class="category">
+        <div class="category-box">
+          <input
+            type="radio"
+            name="category"
+            v-model="category"
+            value="personal"
+          />
+          <p>Personal</p>
+        </div>
+        <div class="category-box">
+          <input type="radio" name="category" v-model="category" value="work" />
+          <p>Work</p>
+        </div>
+      </div>
+      <input type="submit" name="Submit" value="Add" class="button" />
+    </form>
+
+    <ul>
+      <li v-for="(item, index) in todoArr" :key="index">
+        <p>{{ item.todo }}</p>
+        <button class="ml-4">Edit</button>
+        <button class="ml-4 success">Done</button>
+      </li>
+    </ul>
   </div>
-  <HelloWorld msg="Vite + Vue" />
 </template>
 
-<style scoped>
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
-}
-</style>
