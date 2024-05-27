@@ -3,15 +3,16 @@ import { ref, computed, onMounted, watch } from "vue";
 
 const name = ref("");
 const inputContext = ref("");
-const category = ref(null);
+const category = ref("personal");
 const todoArr = ref([]);
-
-watch(name, (value) => {
-  localStorage.setItem("name", value);
-});
+const filteredArr = ref([]);
 
 onMounted(() => {
   name.value = localStorage.getItem("name") || "";
+  todoArr.value = JSON.parse(localStorage.getItem("todos")) || [];
+  filteredArr.value = todoArr.value.filter(
+    (e) => e.category === category.value
+  );
 });
 
 const addTodo = () => {
@@ -21,11 +22,33 @@ const addTodo = () => {
       todo: inputContext.value,
       category: category.value,
       createdAt: new Date().getTime(),
+      done: false,
     });
     inputContext.value = "";
-    category.value = null;
   }
 };
+
+watch(name, (value) => {
+  localStorage.setItem("name", value);
+});
+
+watch(category, (cat) => {
+  filteredArr.value = todoArr.value.filter((e) => {
+    return e.category === cat;
+  });
+  console.log(filteredArr);
+});
+
+watch(
+  todoArr,
+  (value) => {
+    localStorage.setItem("todos", JSON.stringify(value));
+    filteredArr.value = todoArr.value.filter(
+      (e) => e.category === category.value
+    );
+  },
+  { deep: true }
+);
 </script>
 
 <template>
@@ -68,7 +91,7 @@ const addTodo = () => {
     </form>
 
     <ul>
-      <li v-for="(item, index) in todoArr" :key="index">
+      <li v-for="(item, index) in filteredArr" :key="index">
         <p>{{ item.todo }}</p>
         <button class="ml-4">Edit</button>
         <button class="ml-4 success">Done</button>
