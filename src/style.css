@@ -43,6 +43,7 @@ button{
 
 .container{
 	margin: 16px auto;
+	padding: 0 16px;
 	max-width: 800px;
 }
 
@@ -77,8 +78,7 @@ input{
 	display: grid;
 	justify-content: space-between;
 	padding: 16px 0;
-	grid-template-columns: 50% 50%;
-	column-gap: 8px;
+	grid-template-columns: 49% 2% 49%;
 }
 .category-box{
 	padding: 24px 0;
