@@ -16,7 +16,7 @@ onMounted(() => {
     (e) => e.category === category.value
   );
 });
-
+//new commit
 const addTodo = () => {
   if (inputContext.value.trim() === "" || category.value === null) {
     return;
@@ -117,7 +117,6 @@ watch(
           <p>Work</p>
         </div>
       </div>
-
       <input
         v-if="!edit"
         type="submit"
